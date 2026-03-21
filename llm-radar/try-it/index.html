@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LLM Radar — 무료 AI 검색 노출 진단</title>
+  <meta name="description" content="URL 하나만 입력하면 AI 검색에서 내 브랜드가 언급되는지 즉시 확인합니다. 회원가입 없이 무료 진단." />
+  <link rel="canonical" href="https://voidops.space/llm-radar/try-it/" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TH60MXE1SY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-TH60MXE1SY');
+  </script>
+  <script>
+    // 백엔드 API URL — 배포 후 실제 URL로 변경 필요
+    const API_BASE = "https://voidops.space";
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: #f0f0f0;
+      line-height: 1.7;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      border-bottom: 1px solid #1e1e1e;
+    }
+    .logo { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; text-decoration: none; color: #f0f0f0; }
+    .logo span { color: #6ee7b7; }
+    .nav-cta {
+      background: #6ee7b7;
+      color: #0a0a0a;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* HERO */
+    .hero {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 80px 40px 60px;
+      text-align: center;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: #1a1a1a;
+      border: 1px solid #2e2e2e;
+      color: #6ee7b7;
+      font-size: 13px;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+      letter-spacing: 0.3px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+    .hero h1 em { font-style: normal; color: #6ee7b7; }
+    .hero p {
+      font-size: 17px;
+      color: #888;
+      max-width: 520px;
+      margin: 0 auto 36px;
+    }
+
+    /* URL INPUT */
+    .url-form {
+      display: flex;
+      gap: 12px;
+      max-width: 560px;
+      margin: 0 auto 12px;
+    }
+    .url-input {
+      flex: 1;
+      padding: 16px 20px;
+      background: #111;
+      border: 1px solid #2e2e2e;
+      border-radius: 10px;
+      color: #f0f0f0;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .url-input:focus { border-color: #6ee7b7; }
+    .url-input::placeholder { color: #555; }
+    .url-submit {
+      background: #6ee7b7;
+      color: #0a0a0a;
+      padding: 16px 28px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+    .url-submit:hover { opacity: 0.85; }
+    .url-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    .url-hint {
+      font-size: 13px;
+      color: #555;
+      text-align: center;
+    }
+
+    /* STEPS */
+    .steps {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 40px 60px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .step {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 24px 20px;
+      text-align: center;
+    }
+    .step-num {
+      display: inline-block;
+      background: #6ee7b7;
+      color: #0a0a0a;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+    .step-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .step-desc {
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* RESULT */
+    .result-section {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 40px 80px;
+      display: none;
+    }
+    .result-section.visible { display: block; }
+
+    /* LOADING */
+    .loading {
+      text-align: center;
+      padding: 60px 0;
+      display: none;
+    }
+    .loading.visible { display: block; }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #2e2e2e;
+      border-top-color: #6ee7b7;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading p { color: #888; font-size: 15px; }
+
+    /* SUMMARY */
+    .summary-card {
+      background: #111;
+      border: 1px solid #2e2e2e;
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .summary-label { font-size: 14px; color: #888; margin-bottom: 8px; }
+    .summary-rate {
+      font-size: 56px;
+      font-weight: 800;
+      color: #6ee7b7;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .summary-detail { font-size: 14px; color: #666; }
+
+    /* QUESTION CARDS */
+    .q-card {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 12px;
+    }
+    .q-question {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .q-status {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .q-status.mentioned { color: #6ee7b7; }
+    .q-status.not-mentioned { color: #ef4444; }
+    .q-context {
+      font-size: 13px;
+      color: #888;
+      line-height: 1.5;
+    }
+
+    /* EMAIL FORM */
+    .email-section {
+      background: #111;
+      border: 1px solid #2e2e2e;
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin-top: 32px;
+    }
+    .email-section h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .email-section p {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 20px;
+    }
+    .email-form {
+      display: flex;
+      gap: 12px;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+    .email-input {
+      flex: 1;
+      padding: 14px 18px;
+      background: #0a0a0a;
+      border: 1px solid #2e2e2e;
+      border-radius: 8px;
+      color: #f0f0f0;
+      font-size: 14px;
+      outline: none;
+    }
+    .email-input:focus { border-color: #6ee7b7; }
+    .email-submit {
+      background: #6ee7b7;
+      color: #0a0a0a;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+    .email-submit:hover { opacity: 0.85; }
+    .email-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    .email-msg {
+      margin-top: 12px;
+      font-size: 13px;
+    }
+    .email-msg.success { color: #6ee7b7; }
+    .email-msg.error { color: #ef4444; }
+
+    /* ERROR */
+    .error-msg {
+      text-align: center;
+      padding: 40px 0;
+      display: none;
+    }
+    .error-msg.visible { display: block; }
+    .error-msg p { color: #ef4444; font-size: 15px; }
+    .error-msg .retry {
+      margin-top: 16px;
+      background: transparent;
+      border: 1px solid #2e2e2e;
+      color: #f0f0f0;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .error-msg .retry:hover { border-color: #6ee7b7; }
+
+    /* RESPONSIVE */
+    @media (max-width: 640px) {
+      nav { padding: 16px 20px; }
+      .hero { padding: 60px 20px 40px; }
+      .url-form { flex-direction: column; }
+      .steps { grid-template-columns: repeat(2, 1fr); padding: 20px 20px 40px; }
+      .result-section { padding: 0 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/llm-radar/" class="logo">LLM <span>Radar</span></a>
+    <a href="/llm-radar/" class="nav-cta">서비스 소개</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-tag">무료 AI 검색 진단</div>
+    <h1>내 사이트, <em>AI 검색</em>에 보이나요?</h1>
+    <p>URL 하나만 입력하면 AI 검색에서 내 브랜드가 언급되는지 즉시 확인합니다</p>
+    <form class="url-form" id="urlForm">
+      <input type="text" class="url-input" id="urlInput" placeholder="example.com" required />
+      <button type="submit" class="url-submit" id="urlSubmit">무료 진단 시작</button>
+    </form>
+    <p class="url-hint">example.com — 회원가입 없이 바로 확인</p>
+  </section>
+
+  <section class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-title">URL 입력</div>
+      <div class="step-desc">분석할 사이트 주소</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-title">AI 스캔</div>
+      <div class="step-desc">약 10~20초 소요</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-title">노출 결과 확인</div>
+      <div class="step-desc">언급률 즉시 확인</div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-title">리포트 받기</div>
+      <div class="step-desc">이메일로 결과 전송</div>
+    </div>
+  </section>
+
+  <!-- Loading -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>AI 검색에 질문 중...</p>
+  </div>
+
+  <!-- Error -->
+  <div class="error-msg" id="errorMsg">
+    <p id="errorText"></p>
+    <button class="retry" onclick="document.getElementById('errorMsg').classList.remove('visible')">다시 시도</button>
+  </div>
+
+  <!-- Result -->
+  <section class="result-section" id="resultSection">
+    <div class="summary-card">
+      <p class="summary-label">AI 검색 언급률</p>
+      <div class="summary-rate" id="summaryRate">0%</div>
+      <p class="summary-detail" id="summaryDetail"></p>
+    </div>
+
+    <div id="questionCards"></div>
+
+    <div class="email-section">
+      <h3>상세 리포트를 이메일로 받으세요</h3>
+      <p>진단 결과를 이메일로 보내드립니다</p>
+      <form class="email-form" id="emailForm">
+        <input type="email" class="email-input" id="emailInput" placeholder="you@example.com" required />
+        <button type="submit" class="email-submit" id="emailSubmit">전송</button>
+      </form>
+      <p class="email-msg" id="emailMsg"></p>
+    </div>
+  </section>
+
+  <script>
+    let currentScanId = null;
+
+    document.getElementById('urlForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const url = document.getElementById('urlInput').value.trim();
+      if (!url) return;
+
+      // GA event
+      if (typeof gtag === 'function') gtag('event', 'try_scan_start', { url: url });
+
+      // UI state
+      document.getElementById('loading').classList.add('visible');
+      document.getElementById('resultSection').classList.remove('visible');
+      document.getElementById('errorMsg').classList.remove('visible');
+      document.getElementById('urlSubmit').disabled = true;
+
+      try {
+        const resp = await fetch(API_BASE + '/api/try', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: url }),
+        });
+
+        if (!resp.ok) {
+          const err = await resp.json().catch(() => ({}));
+          throw new Error(err.detail || '스캔에 실패했습니다.');
+        }
+
+        const data = await resp.json();
+        currentScanId = data.scan_id;
+        renderResult(data);
+      } catch (err) {
+        document.getElementById('errorText').textContent = err.message;
+        document.getElementById('errorMsg').classList.add('visible');
+      } finally {
+        document.getElementById('loading').classList.remove('visible');
+        document.getElementById('urlSubmit').disabled = false;
+      }
+    });
+
+    function renderResult(data) {
+      const rate = Math.round(data.summary.mention_rate * 100);
+      document.getElementById('summaryRate').textContent = rate + '%';
+      document.getElementById('summaryDetail').textContent =
+        data.summary.total + '개 질문 중 ' + data.summary.mentioned + '개에서 언급됨';
+
+      const cardsEl = document.getElementById('questionCards');
+      cardsEl.innerHTML = '';
+      data.results.forEach(function(r) {
+        const mentioned = r.mentioned;
+        const card = document.createElement('div');
+        card.className = 'q-card';
+        card.innerHTML =
+          '<p class="q-question">Q. ' + escapeHtml(r.question) + '</p>' +
+          '<p class="q-status ' + (mentioned ? 'mentioned' : 'not-mentioned') + '">' +
+          (mentioned ? '✅ 언급됨' : '❌ 미언급') + '</p>' +
+          (r.mention_context ? '<p class="q-context">' + escapeHtml(r.mention_context) + '</p>' : '');
+        cardsEl.appendChild(card);
+      });
+
+      // Reset email form
+      document.getElementById('emailMsg').textContent = '';
+      document.getElementById('emailInput').value = '';
+      document.getElementById('emailSubmit').disabled = false;
+
+      document.getElementById('resultSection').classList.add('visible');
+      document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    document.getElementById('emailForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      if (!currentScanId) return;
+
+      const email = document.getElementById('emailInput').value.trim();
+      if (!email) return;
+
+      document.getElementById('emailSubmit').disabled = true;
+      const msgEl = document.getElementById('emailMsg');
+      msgEl.textContent = '';
+      msgEl.className = 'email-msg';
+
+      try {
+        const resp = await fetch(API_BASE + '/api/try/email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ scan_id: currentScanId, email: email }),
+        });
+
+        if (!resp.ok) {
+          const err = await resp.json().catch(() => ({}));
+          throw new Error(err.detail || '이메일 전송에 실패했습니다.');
+        }
+
+        msgEl.textContent = '이메일이 발송되었습니다!';
+        msgEl.className = 'email-msg success';
+        if (typeof gtag === 'function') gtag('event', 'try_email_sent', { scan_id: currentScanId });
+      } catch (err) {
+        msgEl.textContent = err.message;
+        msgEl.className = 'email-msg error';
+        document.getElementById('emailSubmit').disabled = false;
+      }
+    });
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+  </script>
+</body>
+</html>
