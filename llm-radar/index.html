@@ -455,11 +455,22 @@
   </footer>
 
   <script>
+    // 진단 신청하기 (mailto) 클릭
     document.querySelectorAll('a[href^="mailto"]').forEach(function(el) {
       el.addEventListener('click', function() {
         gtag('event', 'cta_click', {
           event_category: 'engagement',
-          event_label: '진단 신청하기'
+          event_label: el.classList.contains('nav-cta') ? '진단 신청하기_nav' : '진단 신청하기'
+        });
+      });
+    });
+
+    // PDF 소개서 다운로드 클릭
+    document.querySelectorAll('a[download]').forEach(function(el) {
+      el.addEventListener('click', function() {
+        gtag('event', 'pdf_download', {
+          event_category: 'engagement',
+          event_label: '서비스소개서'
         });
       });
     });

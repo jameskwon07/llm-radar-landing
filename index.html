@@ -188,5 +188,26 @@
     <p>© 2026 VoidOps · <a href="mailto:contact@voidops.space">contact@voidops.space</a></p>
   </footer>
 
+  <script>
+    // Contact 링크 클릭
+    document.querySelectorAll('a[href^="mailto"]').forEach(function(el) {
+      el.addEventListener('click', function() {
+        gtag('event', 'cta_click', {
+          event_category: 'engagement',
+          event_label: 'contact'
+        });
+      });
+    });
+
+    // LLM Radar 카드 클릭
+    document.querySelectorAll('a[href="/llm-radar/"], a[href="/llm-radar"]').forEach(function(el) {
+      el.addEventListener('click', function() {
+        gtag('event', 'product_card_click', {
+          event_category: 'navigation',
+          event_label: 'llm-radar'
+        });
+      });
+    });
+  </script>
 </body>
 </html>
