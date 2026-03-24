@@ -420,9 +420,9 @@
       <div class="loading-bar" id="loadingBar"></div>
     </div>
     <div class="loading-steps">
-      <span class="loading-step-badge" id="badge-l1">L1 브랜드 질문</span>
-      <span class="loading-step-badge" id="badge-l2">L2 카테고리</span>
-      <span class="loading-step-badge" id="badge-l3">L3 일반</span>
+      <span class="loading-step-badge" id="badge-l1">브랜드 질문</span>
+      <span class="loading-step-badge" id="badge-l2">카테고리 질문</span>
+      <span class="loading-step-badge" id="badge-l3">일반 질문</span>
     </div>
   </div>
 
@@ -462,13 +462,13 @@
     const LOADING_STAGES = [
       { at: 0,  msg: "브랜드명 분석 중...",               bar: 5,  badge: null },
       { at: 4,  msg: "AI 질문 세트 생성 중...",           bar: 12, badge: null },
-      { at: 10, msg: "L1 브랜드 특화 질문 스캔 중...",    bar: 20, badge: "l1" },
-      { at: 20, msg: "L1 두 번째 질문 확인 중...",        bar: 35, badge: "l1" },
-      { at: 30, msg: "L1 세 번째 질문 확인 중...",        bar: 48, badge: "l1" },
-      { at: 40, msg: "L2 카테고리 질문 스캔 중...",       bar: 58, badge: "l2" },
-      { at: 50, msg: "L2 두 번째 질문 확인 중...",        bar: 68, badge: "l2" },
-      { at: 60, msg: "L2 세 번째 질문 확인 중...",        bar: 78, badge: "l2" },
-      { at: 70, msg: "L3 일반 질문 스캔 중...",           bar: 85, badge: "l3" },
+      { at: 10, msg: "브랜드 질문 스캔 중...",    bar: 20, badge: "l1" },
+      { at: 20, msg: "브랜드 질문 두 번째 확인 중...",    bar: 35, badge: "l1" },
+      { at: 30, msg: "브랜드 질문 세 번째 확인 중...",    bar: 48, badge: "l1" },
+      { at: 40, msg: "카테고리 질문 스캔 중...",          bar: 58, badge: "l2" },
+      { at: 50, msg: "카테고리 질문 두 번째 확인 중...",  bar: 68, badge: "l2" },
+      { at: 60, msg: "카테고리 질문 세 번째 확인 중...",  bar: 78, badge: "l2" },
+      { at: 70, msg: "일반 질문 스캔 중...",              bar: 85, badge: "l3" },
       { at: 80, msg: "거의 완료됐어요...",                 bar: 92, badge: "l3" },
       { at: 90, msg: "결과 정리 중... 조금만 기다려주세요", bar: 97, badge: null },
     ];
