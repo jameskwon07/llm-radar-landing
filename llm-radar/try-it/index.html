@@ -341,6 +341,34 @@
     .email-msg.success { color: #6ee7b7; }
     .email-msg.error { color: #ef4444; }
 
+    /* CONSENT */
+    .consent-wrap {
+      max-width: 440px;
+      margin: 12px auto 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      text-align: left;
+    }
+    .consent-wrap input[type="checkbox"] {
+      margin-top: 2px;
+      accent-color: #6ee7b7;
+      flex-shrink: 0;
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
+    .consent-wrap label {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+    .consent-wrap a {
+      color: #6ee7b7;
+      text-decoration: underline;
+    }
+
     /* ERROR */
     .error-msg {
       text-align: center;
@@ -459,6 +487,13 @@
         <input type="email" class="email-input" id="emailInput" placeholder="you@example.com" required />
         <button type="submit" class="email-submit" id="emailSubmit">전송</button>
       </form>
+      <div class="consent-wrap">
+        <input type="checkbox" id="emailConsent" />
+        <label for="emailConsent">
+          이메일 주소 수집 및 분석 결과 발송에 동의합니다.
+          (<a href="/privacy/" target="_blank">개인정보 처리방침</a>)
+        </label>
+      </div>
       <p class="email-msg" id="emailMsg"></p>
     </div>
   </section>
@@ -614,6 +649,7 @@
       // Reset email form
       document.getElementById('emailMsg').textContent = '';
       document.getElementById('emailInput').value = '';
+      document.getElementById('emailConsent').checked = false;
       document.getElementById('emailSubmit').disabled = false;
 
       document.getElementById('resultSection').classList.add('visible');
@@ -626,6 +662,14 @@
 
       const email = document.getElementById('emailInput').value.trim();
       if (!email) return;
+
+      const consent = document.getElementById('emailConsent').checked;
+      if (!consent) {
+        const msgEl = document.getElementById('emailMsg');
+        msgEl.textContent = '개인정보 수집에 동의해 주세요.';
+        msgEl.className = 'email-msg error';
+        return;
+      }
 
       document.getElementById('emailSubmit').disabled = true;
       const msgEl = document.getElementById('emailMsg');
