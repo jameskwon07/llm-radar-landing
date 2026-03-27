@@ -490,8 +490,14 @@
       <div class="consent-wrap">
         <input type="checkbox" id="emailConsent" />
         <label for="emailConsent">
-          이메일 주소 수집 및 분석 결과 발송에 동의합니다.
-          (<a href="/privacy/" target="_blank">개인정보 처리방침</a>)
+          <strong style="color:#6ee7b7;">(필수)</strong> 이메일 주소 수집 및 분석 결과 발송에 동의합니다.
+          (<a href="/llm-radar/privacy/" target="_blank">개인정보 처리방침</a>)
+        </label>
+      </div>
+      <div class="consent-wrap">
+        <input type="checkbox" id="emailMarketingConsent" />
+        <label for="emailMarketingConsent">
+          <span style="color:#888;">(선택)</span> AI 검색 트렌드 업데이트 및 LLM Radar 신규 기능 소식을 이메일로 받겠습니다.
         </label>
       </div>
       <p class="email-msg" id="emailMsg"></p>
@@ -499,6 +505,32 @@
   </section>
 
   <script>
+    // Supabase subscriber tracking
+    const SUPABASE_URL = 'https://utuzyvifcuzgsctdylgf.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV0dXp5dmlmY3V6Z3NjdGR5bGdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNjc0NjIsImV4cCI6MjA4OTg0MzQ2Mn0.Pxmq0V5gExz_dkZJFmFdHHBEzIPSJnNdOmIlb-qQ1f8';
+
+    async function saveSubscriber(email, marketingConsent) {
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/mailing_subscribers`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Prefer': 'resolution=merge-duplicates'
+          },
+          body: JSON.stringify({
+            email: email,
+            marketing_consent: marketingConsent,
+            source: 'try-it'
+          })
+        });
+      } catch (e) {
+        // silent fail - 이메일 발송은 계속 진행
+        console.warn('subscriber save failed:', e);
+      }
+    }
+
     let currentScanId = null;
     let loadingInterval = null;
     let timerInterval = null;
@@ -650,6 +682,7 @@
       document.getElementById('emailMsg').textContent = '';
       document.getElementById('emailInput').value = '';
       document.getElementById('emailConsent').checked = false;
+      document.getElementById('emailMarketingConsent').checked = false;
       document.getElementById('emailSubmit').disabled = false;
 
       document.getElementById('resultSection').classList.add('visible');
@@ -691,6 +724,10 @@
         msgEl.textContent = '이메일이 발송되었습니다!';
         msgEl.className = 'email-msg success';
         if (typeof gtag === 'function') gtag('event', 'try_email_sent', { scan_id: currentScanId });
+
+        // Supabase에 구독자 저장 (best-effort)
+        const marketingConsent = document.getElementById('emailMarketingConsent').checked;
+        await saveSubscriber(email, marketingConsent);
       } catch (err) {
         msgEl.textContent = err.message;
         msgEl.className = 'email-msg error';
