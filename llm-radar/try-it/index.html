@@ -507,7 +507,7 @@
   <script>
     // Supabase subscriber tracking
     const SUPABASE_URL = 'https://utuzyvifcuzgsctdylgf.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV0dXp5dmlmY3V6Z3NjdGR5bGdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNjc0NjIsImV4cCI6MjA4OTg0MzQ2Mn0.Pxmq0V5gExz_dkZJFmFdHHBEzIPSJnNdOmIlb-qQ1f8';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV0dXp5dmlmY3V6Z3NjdGR5bGdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNjc0NjIsImV4cCI6MjA4OTg0MzQ2Mn0.qJ72zKsH4G8e6Nq0IaiRS0skWRn-0N5QcEG8eBR9TM4';
 
     async function saveSubscriber(email, marketingConsent) {
       try {
@@ -517,7 +517,7 @@
             'Content-Type': 'application/json',
             'apikey': SUPABASE_ANON_KEY,
             'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-            'Prefer': 'resolution=merge-duplicates'
+            'Prefer': 'return=minimal'
           },
           body: JSON.stringify({
             email: email,
