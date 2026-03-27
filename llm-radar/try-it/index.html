@@ -638,12 +638,16 @@
     </div>
   </section>
 
-  <!-- 개발용: 프로덕션 빌드 시 제거 -->
-  <button id="devTest" style="position:fixed;bottom:20px;right:20px;background:#333;color:#fff;padding:8px 16px;border:none;border-radius:8px;cursor:pointer;font-size:12px;z-index:9999;">
+  <!-- 개발용: 로컬에서만 노출 -->
+  <button id="devTest" style="position:fixed;bottom:20px;right:20px;background:#333;color:#fff;padding:8px 16px;border:none;border-radius:8px;cursor:pointer;font-size:12px;z-index:9999;display:none;">
     [DEV] 목 결과 테스트
   </button>
 
   <script>
+    // 환경 구분: localhost / 127.0.0.1 이면 개발, 아니면 프로덕션
+    const IS_DEV = ['localhost', '127.0.0.1'].includes(location.hostname);
+    if (IS_DEV) document.getElementById('devTest').style.display = 'block';
+
     // Variant: URL 파라미터(개발용) 또는 PostHog Feature Flag(프로덕션)
     const _urlVariant = new URLSearchParams(window.location.search).get('v');
     // 기본값: question-list (PostHog 로드 전 fallback)
