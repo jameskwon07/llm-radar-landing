@@ -646,20 +646,19 @@
   <script>
     // Variant: URL 파라미터(개발용) 또는 PostHog Feature Flag(프로덕션)
     const _urlVariant = new URLSearchParams(window.location.search).get('v');
-    let VARIANT = _urlVariant || null;
+    // 기본값: question-list (PostHog 로드 전 fallback)
+    let VARIANT = _urlVariant || 'question-list';
 
     // PostHog Feature Flag로 variant 결정 (URL 파라미터 없을 때)
     if (!_urlVariant) {
       posthog.onFeatureFlags(function() {
         const flag = posthog.getFeatureFlag('try-it-variant');
-        if (flag && flag !== 'control') {
-          VARIANT = flag;
-        }
+        if (flag) VARIANT = flag;
+        posthog.capture('try_it_view', { variant: VARIANT });
       });
+    } else {
+      posthog.capture('try_it_view', { variant: VARIANT });
     }
-
-    // PostHog: 페이지 진입 시 variant 기록
-    posthog.capture('try_it_view', { variant: VARIANT || 'control' });
 
     // Supabase subscriber tracking
     const SUPABASE_URL = 'https://utuzyvifcuzgsctdylgf.supabase.co';
