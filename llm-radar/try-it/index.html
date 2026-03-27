@@ -6,6 +6,15 @@
   <title>LLM Radar — 무료 AI 검색 노출 진단</title>
   <meta name="description" content="URL 하나만 입력하면 AI 검색에서 내 브랜드가 언급되는지 즉시 확인합니다. 회원가입 없이 무료 진단." />
   <link rel="canonical" href="https://voidops.space/llm-radar/try-it/" />
+  <!-- PostHog -->
+  <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+" (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_1s754x0r2qad1OuqO3eHHNUtvaXVATEveEysCA0vk9b', {
+      api_host: 'https://us.i.posthog.com',
+      person_profiles: 'identified_only',
+    });
+  </script>
+
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-TH60MXE1SY"></script>
   <script>
@@ -389,6 +398,131 @@
     }
     .error-msg .retry:hover { border-color: #6ee7b7; }
 
+    /* VARIANT: blur-context */
+    .q-locked {
+      font-size: 13px;
+      color: #555;
+      background: #111;
+      border: 1px dashed #333;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    /* VARIANT: blur-bottom */
+    .q-blurred {
+      filter: blur(4px);
+      pointer-events: none;
+      user-select: none;
+      position: relative;
+    }
+    .q-blur-wrapper {
+      position: relative;
+    }
+    .q-blur-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(10,10,10,0.85);
+      color: #6ee7b7;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid #2e2e2e;
+      white-space: nowrap;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* VARIANT: count-only */
+    .count-summary {
+      display: flex;
+      gap: 16px;
+      margin: 24px 0;
+      flex-wrap: wrap;
+    }
+    .count-box {
+      flex: 1;
+      background: #111;
+      border: 1px solid #2e2e2e;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      font-size: 15px;
+      min-width: 120px;
+    }
+    .count-box span {
+      display: block;
+      font-size: 36px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+    .count-box.mentioned span { color: #6ee7b7; }
+    .count-box.not-mentioned span { color: #ef4444; }
+    .count-hint {
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      margin-top: 12px;
+    }
+
+    /* VARIANT: question-list */
+    .q-list-wrap {
+      margin: 24px 0;
+    }
+    .q-list-summary {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .q-list-badge {
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .q-list-badge.mentioned {
+      background: #0f2a1e;
+      color: #6ee7b7;
+      border: 1px solid #1a4a30;
+    }
+    .q-list-badge.not-mentioned {
+      background: #2a0f0f;
+      color: #ef4444;
+      border: 1px solid #4a1a1a;
+    }
+    .q-list-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #ccc;
+    }
+    .q-list-num {
+      font-size: 12px;
+      color: #444;
+      flex-shrink: 0;
+      width: 20px;
+    }
+    .q-list-status {
+      font-size: 13px;
+      flex-shrink: 0;
+      color: #444;
+      background: #1a1a1a;
+      border: 1px solid #2e2e2e;
+      border-radius: 4px;
+      padding: 2px 8px;
+    }
+
     /* RESPONSIVE */
     @media (max-width: 640px) {
       nav { padding: 16px 20px; }
@@ -504,7 +638,29 @@
     </div>
   </section>
 
+  <!-- 개발용: 프로덕션 빌드 시 제거 -->
+  <button id="devTest" style="position:fixed;bottom:20px;right:20px;background:#333;color:#fff;padding:8px 16px;border:none;border-radius:8px;cursor:pointer;font-size:12px;z-index:9999;">
+    [DEV] 목 결과 테스트
+  </button>
+
   <script>
+    // Variant: URL 파라미터(개발용) 또는 PostHog Feature Flag(프로덕션)
+    const _urlVariant = new URLSearchParams(window.location.search).get('v');
+    let VARIANT = _urlVariant || null;
+
+    // PostHog Feature Flag로 variant 결정 (URL 파라미터 없을 때)
+    if (!_urlVariant) {
+      posthog.onFeatureFlags(function() {
+        const flag = posthog.getFeatureFlag('try-it-variant');
+        if (flag && flag !== 'control') {
+          VARIANT = flag;
+        }
+      });
+    }
+
+    // PostHog: 페이지 진입 시 variant 기록
+    posthog.capture('try_it_view', { variant: VARIANT || 'control' });
+
     // Supabase subscriber tracking
     const SUPABASE_URL = 'https://utuzyvifcuzgsctdylgf.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV0dXp5dmlmY3V6Z3NjdGR5bGdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNjc0NjIsImV4cCI6MjA4OTg0MzQ2Mn0.qJ72zKsH4G8e6Nq0IaiRS0skWRn-0N5QcEG8eBR9TM4';
@@ -660,23 +816,166 @@
 
     function renderResult(data) {
       const rate = Math.round(data.summary.mention_rate * 100);
+      const mentionedCount = data.summary.mentioned;
+      const totalCount = data.summary.total;
+      const notMentionedCount = totalCount - mentionedCount;
+
       document.getElementById('summaryRate').textContent = rate + '%';
       document.getElementById('summaryDetail').textContent =
-        data.summary.total + '개 질문 중 ' + data.summary.mentioned + '개에서 언급됨';
+        totalCount + '개 질문 중 ' + mentionedCount + '개에서 언급됨';
 
       const cardsEl = document.getElementById('questionCards');
       cardsEl.innerHTML = '';
-      data.results.forEach(function(r) {
-        const mentioned = r.mentioned;
-        const card = document.createElement('div');
-        card.className = 'q-card';
-        card.innerHTML =
-          '<p class="q-question">Q. ' + escapeHtml(r.question) + '</p>' +
-          '<p class="q-status ' + (mentioned ? 'mentioned' : 'not-mentioned') + '">' +
-          (mentioned ? '✅ 언급됨' : '❌ 미언급') + '</p>' +
-          (r.mention_context ? '<p class="q-context">' + escapeHtml(r.mention_context) + '</p>' : '');
-        cardsEl.appendChild(card);
-      });
+
+      // email-section 동적 텍스트
+      const emailH3 = document.querySelector('.email-section h3');
+      const emailP = document.querySelector('.email-section p');
+
+      if (VARIANT === 'question-list') {
+        // question-list: 질문 목록 공개 + 언급/미언급 상태는 블러 처리 + 숫자 요약만
+        const wrap = document.createElement('div');
+        wrap.className = 'q-list-wrap';
+
+        // 상단 요약 배지
+        const summaryEl = document.createElement('div');
+        summaryEl.className = 'q-list-summary';
+        summaryEl.innerHTML =
+          '<span class="q-list-badge mentioned">✅ 언급됨 ' + mentionedCount + '개</span>' +
+          '<span class="q-list-badge not-mentioned">❌ 미언급 ' + notMentionedCount + '개</span>';
+        wrap.appendChild(summaryEl);
+
+        // 질문 리스트 (상태는 블러)
+        data.results.forEach(function(r, i) {
+          const item = document.createElement('div');
+          item.className = 'q-list-item';
+          item.innerHTML =
+            '<span class="q-list-num">' + (i + 1) + '</span>' +
+            '<span style="flex:1">' + escapeHtml(r.question) + '</span>' +
+            '<span class="q-list-status">?</span>';
+          wrap.appendChild(item);
+        });
+
+        const hint = document.createElement('p');
+        hint.className = 'count-hint';
+        hint.textContent = '각 질문에 대한 AI 실제 답변과 개선 방법은 이메일 리포트에 포함됩니다';
+        wrap.appendChild(hint);
+        cardsEl.appendChild(wrap);
+
+        // email-section 텍스트
+        if (emailH3) emailH3.textContent = '어떤 질문에서 언급됐는지 확인하세요';
+        if (emailP) {
+          if (rate === 0) {
+            emailP.textContent = '6개 질문 모두에서 미언급입니다. AI가 왜 모르는지 분석 결과를 보내드립니다';
+          } else if (rate < 50) {
+            emailP.textContent = notMentionedCount + '개 질문에서 미언급입니다. 어떤 질문인지 + AI 답변 전문을 보내드립니다';
+          } else {
+            emailP.textContent = '좋은 노출률이에요. 전체 질문별 AI 답변과 개선 포인트를 보내드립니다';
+          }
+        }
+
+      } else if (VARIANT === 'count-only') {
+        // count-only: 카드 대신 요약 박스
+        const summary = document.createElement('div');
+        summary.className = 'count-summary';
+        summary.innerHTML =
+          '<div class="count-box mentioned">✅ 언급됨 <span>' + mentionedCount + '개</span></div>' +
+          '<div class="count-box not-mentioned">❌ 미언급 <span>' + notMentionedCount + '개</span></div>';
+        const hint = document.createElement('p');
+        hint.className = 'count-hint';
+        hint.textContent = '각 질문에 대한 AI 실제 답변은 이메일 리포트에 포함됩니다';
+        cardsEl.appendChild(summary);
+        cardsEl.appendChild(hint);
+
+        // email-section 텍스트
+        if (emailH3) emailH3.textContent = '상세 결과를 이메일로 받으세요';
+        if (emailP) {
+          if (rate === 0) {
+            emailP.textContent = 'AI가 아직 당신 브랜드를 모릅니다. 왜 그런지 분석 결과를 보내드립니다';
+          } else if (rate < 50) {
+            emailP.textContent = '일부 질문에서만 언급됩니다. 놓친 ' + notMentionedCount + '개 질문의 AI 답변을 확인하세요';
+          } else {
+            emailP.textContent = '좋은 노출률이에요. 전체 분석 리포트를 이메일로 받으세요';
+          }
+        }
+
+      } else if (VARIANT === 'blur-context') {
+        // blur-context: 미언급 카드의 컨텍스트를 잠금 메시지로 대체
+        data.results.forEach(function(r) {
+          const mentioned = r.mentioned;
+          const card = document.createElement('div');
+          card.className = 'q-card';
+          let contextHtml = '';
+          if (mentioned) {
+            contextHtml = r.mention_context ? '<p class="q-context">' + escapeHtml(r.mention_context) + '</p>' : '';
+          } else {
+            contextHtml = '<div class="q-locked">🔒 AI의 실제 답변은 이메일 리포트에서 확인하세요</div>';
+          }
+          card.innerHTML =
+            '<p class="q-question">Q. ' + escapeHtml(r.question) + '</p>' +
+            '<p class="q-status ' + (mentioned ? 'mentioned' : 'not-mentioned') + '">' +
+            (mentioned ? '✅ 언급됨' : '❌ 미언급') + '</p>' +
+            contextHtml;
+          cardsEl.appendChild(card);
+        });
+
+        // email-section 텍스트
+        if (emailH3) emailH3.textContent = 'AI가 실제로 뭐라고 답했는지 확인하세요';
+        if (emailP) {
+          if (rate === 0) {
+            emailP.textContent = 'AI가 아직 당신 브랜드를 모릅니다. 왜 그런지 분석 결과를 보내드립니다';
+          } else if (rate < 50) {
+            emailP.textContent = '미언급된 ' + notMentionedCount + '개 질문에 대한 AI 실제 답변을 이메일로 보내드립니다';
+          } else {
+            emailP.textContent = '좋은 노출률이에요. 전체 분석 리포트를 이메일로 받으세요';
+          }
+        }
+
+      } else if (VARIANT === 'blur-bottom') {
+        // blur-bottom: 하위 절반 카드에 blur 적용
+        const half = Math.ceil(data.results.length / 2);
+        data.results.forEach(function(r, idx) {
+          const mentioned = r.mentioned;
+          const card = document.createElement('div');
+          card.className = 'q-card';
+          card.innerHTML =
+            '<p class="q-question">Q. ' + escapeHtml(r.question) + '</p>' +
+            '<p class="q-status ' + (mentioned ? 'mentioned' : 'not-mentioned') + '">' +
+            (mentioned ? '✅ 언급됨' : '❌ 미언급') + '</p>' +
+            (r.mention_context ? '<p class="q-context">' + escapeHtml(r.mention_context) + '</p>' : '');
+
+          if (idx >= half) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'q-blur-wrapper';
+            card.classList.add('q-blurred');
+            wrapper.appendChild(card);
+            const overlay = document.createElement('div');
+            overlay.className = 'q-blur-overlay';
+            overlay.textContent = '전체 결과를 이메일로 받으세요 →';
+            wrapper.appendChild(overlay);
+            cardsEl.appendChild(wrapper);
+          } else {
+            cardsEl.appendChild(card);
+          }
+        });
+
+        // email-section 텍스트 기본 유지
+        if (emailH3) emailH3.textContent = '상세 리포트를 이메일로 받으세요';
+        if (emailP) emailP.textContent = '진단 결과를 이메일로 보내드립니다';
+
+      } else {
+        // 기존 동작 (VARIANT === null)
+        data.results.forEach(function(r) {
+          const mentioned = r.mentioned;
+          const card = document.createElement('div');
+          card.className = 'q-card';
+          card.innerHTML =
+            '<p class="q-question">Q. ' + escapeHtml(r.question) + '</p>' +
+            '<p class="q-status ' + (mentioned ? 'mentioned' : 'not-mentioned') + '">' +
+            (mentioned ? '✅ 언급됨' : '❌ 미언급') + '</p>' +
+            (r.mention_context ? '<p class="q-context">' + escapeHtml(r.mention_context) + '</p>' : '');
+          cardsEl.appendChild(card);
+        });
+      }
 
       // Reset email form
       document.getElementById('emailMsg').textContent = '';
@@ -724,6 +1023,7 @@
         msgEl.textContent = '이메일이 발송되었습니다!';
         msgEl.className = 'email-msg success';
         if (typeof gtag === 'function') gtag('event', 'try_email_sent', { scan_id: currentScanId });
+        posthog.capture('try_email_sent', { variant: VARIANT || 'control', scan_id: currentScanId });
 
         // Supabase에 구독자 저장 (best-effort)
         const marketingConsent = document.getElementById('emailMarketingConsent').checked;
@@ -739,6 +1039,24 @@
       if (!str) return '';
       return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
+
+    // DEV: 목 결과 테스트 버튼
+    document.getElementById('devTest')?.addEventListener('click', function() {
+      currentScanId = 'mock-123';
+      renderResult({
+        scan_id: 'mock-123',
+        url: 'example.com',
+        summary: { mention_rate: 0.33, mentioned: 2, total: 6 },
+        results: [
+          { question: 'LLM 검색 최적화 도구를 추천해줘', mentioned: true, mention_context: 'example.com은 LLM 검색 최적화를 위한 도구입니다.' },
+          { question: 'AI 검색에서 브랜드 노출을 높이는 방법은?', mentioned: false, mention_context: '다양한 방법이 있습니다.' },
+          { question: '브랜드 모니터링 서비스 추천해줘', mentioned: false, mention_context: null },
+          { question: 'Perplexity에서 내 사이트 노출 확인하는 방법', mentioned: true, mention_context: 'example.com 같은 도구를 활용할 수 있습니다.' },
+          { question: 'GEO 최적화란?', mentioned: false, mention_context: 'GEO는 Generative Engine Optimization의 약자입니다.' },
+          { question: 'AI가 내 브랜드를 언급하게 만들려면?', mentioned: false, mention_context: null },
+        ]
+      });
+    });
   </script>
 
   <footer style="padding:32px 40px;border-top:1px solid #1e1e1e;text-align:center;font-size:13px;color:#444;">
