@@ -60,4 +60,5 @@ LLM Radar는 혼자 사업하는 사람이 직접 만들고, 직접 쓰면서 �
 
 - 🌐 서비스: [voidops.space/llm-radar](https://voidops.space/llm-radar/)
 - 🔍 무료 체험: [voidops.space/llm-radar/try-it](https://voidops.space/llm-radar/try-it/)
+- 📝 빌드 로그: [codingbridge.blog](https://codingbridge.blog/2026/02/22/llm-radar-build-1/)
 - 📬 문의: contact@voidops.space
