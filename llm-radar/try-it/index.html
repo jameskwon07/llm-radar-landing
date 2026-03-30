@@ -665,30 +665,7 @@
     }
 
     // Supabase subscriber tracking
-    const SUPABASE_URL = 'https://utuzyvifcuzgsctdylgf.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV0dXp5dmlmY3V6Z3NjdGR5bGdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNjc0NjIsImV4cCI6MjA4OTg0MzQ2Mn0.qJ72zKsH4G8e6Nq0IaiRS0skWRn-0N5QcEG8eBR9TM4';
 
-    async function saveSubscriber(email, marketingConsent) {
-      try {
-        await fetch(`${SUPABASE_URL}/rest/v1/mailing_subscribers`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-            'Prefer': 'return=minimal'
-          },
-          body: JSON.stringify({
-            email: email,
-            marketing_consent: marketingConsent,
-            source: 'try-it'
-          })
-        });
-      } catch (e) {
-        // silent fail - 이메일 발송은 계속 진행
-        console.warn('subscriber save failed:', e);
-      }
-    }
 
     let currentScanId = null;
     let loadingInterval = null;
@@ -1014,10 +991,11 @@
       msgEl.className = 'email-msg';
 
       try {
+        const marketingConsent = document.getElementById('emailMarketingConsent').checked;
         const resp = await fetch(API_BASE + '/api/try/email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ scan_id: currentScanId, email: email }),
+          body: JSON.stringify({ scan_id: currentScanId, email: email, marketing_consent: marketingConsent }),
         });
 
         if (!resp.ok) {
@@ -1029,10 +1007,6 @@
         msgEl.className = 'email-msg success';
         if (typeof gtag === 'function') gtag('event', 'try_email_sent', { scan_id: currentScanId });
         posthog.capture('try_email_sent', { variant: VARIANT || 'control', scan_id: currentScanId });
-
-        // Supabase에 구독자 저장 (best-effort)
-        const marketingConsent = document.getElementById('emailMarketingConsent').checked;
-        await saveSubscriber(email, marketingConsent);
       } catch (err) {
         msgEl.textContent = err.message;
         msgEl.className = 'email-msg error';
