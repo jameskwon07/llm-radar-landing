@@ -56,17 +56,8 @@ LLM Radar is built by a solopreneur for solopreneurs — to give you visibility 
 
 ---
 
-## Build Log
-
-Follow the public build log on [codingbridge.blog](https://codingbridge.blog) — every decision, mistake, and result documented in real time.
-
-→ [LLM Radar 만들기 (빌드 로그 시리즈)](https://codingbridge.blog/2026/02/22/llm-radar-build-1/)
-
----
-
 ## Links
 
 - 🌐 Service: [voidops.space/llm-radar](https://voidops.space/llm-radar/)
 - 🔍 Try Demo: [voidops.space/llm-radar/try-it](https://voidops.space/llm-radar/try-it/)
-- 📝 Build Log: [codingbridge.blog](https://codingbridge.blog)
 - 📬 Contact: contact@voidops.space
